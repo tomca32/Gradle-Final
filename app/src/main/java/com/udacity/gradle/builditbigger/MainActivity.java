@@ -12,6 +12,7 @@ import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -25,6 +26,7 @@ import io.tomislav.joker.JokerActivity;
 public class MainActivity extends AppCompatActivity {
 
     private JokeApi jokeApiService = null;
+    private ProgressBar progressBar;
     private final String API_ROOT_URL = "http://10.0.2.2:8080/_ah/api/";
     CountingIdlingResource idlingResource = new CountingIdlingResource("network");
 
@@ -32,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
         setupApi();
     }
 
@@ -75,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void getAndShowJoke(View view) {
         idlingResource.increment();
+        progressBar.setVisibility(View.VISIBLE);
         new JokeAsyncTask().execute();
     }
 
@@ -97,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
+            progressBar.setVisibility(View.GONE);
             startJoke(result);
         }
     }
