@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.VisibleForTesting;
+import android.support.test.espresso.IdlingResource;
+import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Pair;
 import android.view.Menu;
@@ -23,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
     private JokeApi jokeApiService = null;
     private final String API_ROOT_URL = "http://10.0.2.2:8080/_ah/api/";
+    CountingIdlingResource idlingResource = new CountingIdlingResource("network");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,10 +74,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void getAndShowJoke(View view) {
+        idlingResource.increment();
         new JokeAsyncTask().execute();
     }
 
     public void startJoke(String joke) {
+        idlingResource.decrement();
         Intent jokerIntent = new Intent(this, JokerActivity.class);
         jokerIntent.putExtra(JokerActivity.JOKE_EXTRA, joke);
         startActivity(jokerIntent);
@@ -93,5 +99,10 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
             startJoke(result);
         }
+    }
+
+    @VisibleForTesting
+    public IdlingResource getIdlingResource() {
+        return idlingResource;
     }
 }
