@@ -25,6 +25,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    productFlavors {
+        free {
+            applicationId 'com.udacity.gradle.builditbigger.free'
+        }
+
+        paid {
+            applicationId 'com.udacity.gradle.builditbigger'
+        }
+    }
 }
 
 dependencies {
@@ -36,9 +46,7 @@ dependencies {
 
     compile 'com.android.support.test.espresso:espresso-idling-resource:2.2.2'
     compile 'com.android.support:appcompat-v7:25.0.0'
-    compile('com.google.android.gms:play-services-ads:9.8.0') {
-        force = true
-    }
+    freeCompile 'com.google.android.gms:play-services-ads:9.8.0'
     compile project(path: ':joker')
     compile project(path: ':backend', configuration: 'android-endpoints')
 }
