@@ -13,7 +13,7 @@ public class JokerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_joker);
-        jokeView = findViewById(R.id.joke_text);
+        jokeView = (TextView) findViewById(R.id.joke_text);
         displayJoke();
     }
 

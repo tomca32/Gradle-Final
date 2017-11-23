@@ -1,25 +1,51 @@
 package com.udacity.gradle.builditbigger;
 
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.extensions.android.json.AndroidJsonFactory;
+import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
+import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
+import com.udacity.gradle.builditbigger.backend.jokeApi.JokeApi;
+
+import java.io.IOException;
 import io.tomislav.joker.JokerActivity;
-import io.tomislav.joketeller.JokeTeller;
-
-
 public class MainActivity extends AppCompatActivity {
+
+    private JokeApi jokeApiService = null;
+    private final String API_ROOT_URL = "http://10.0.2.2:8080/_ah/api/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setupApi();
     }
 
+
+    private void setupApi() {
+        if(jokeApiService == null) {  // Only do this once
+            JokeApi.Builder builder = new JokeApi.Builder(AndroidHttp.newCompatibleTransport(),
+                new AndroidJsonFactory(), null)
+                .setRootUrl(API_ROOT_URL)
+                .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
+                    @Override
+                    public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest) throws IOException {
+                        abstractGoogleClientRequest.setDisableGZipContent(true);
+                    }
+                });
+            jokeApiService = builder.build();
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -43,11 +69,29 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void tellJoke(View view) {
+    public void getAndShowJoke(View view) {
+        new JokeAsyncTask().execute();
+    }
+
+    public void startJoke(String joke) {
         Intent jokerIntent = new Intent(this, JokerActivity.class);
-        jokerIntent.putExtra(JokerActivity.JOKE_EXTRA, JokeTeller.getJoke());
+        jokerIntent.putExtra(JokerActivity.JOKE_EXTRA, joke);
         startActivity(jokerIntent);
     }
 
+    class JokeAsyncTask extends AsyncTask<Void, Void, String> {
+        @Override
+        protected String doInBackground(Void... params) {
+            try {
+                return jokeApiService.getJoke().execute().getData();
+            } catch (IOException e) {
+                return e.getMessage();
+            }
+        }
 
+        @Override
+        protected void onPostExecute(String result) {
+            startJoke(result);
+        }
+    }
 }
