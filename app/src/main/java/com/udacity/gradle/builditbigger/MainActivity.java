@@ -8,6 +8,7 @@ import android.support.annotation.VisibleForTesting;
 import android.support.test.espresso.IdlingResource;
 import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,10 +26,12 @@ import java.io.IOException;
 import io.tomislav.joker.JokerActivity;
 public class MainActivity extends AppCompatActivity {
 
+    protected final String COUNTER_TAG = "COUNTER_TAG";
+
     private JokeApi jokeApiService = null;
     private ProgressBar progressBar;
     private final String API_ROOT_URL = "http://10.0.2.2:8080/_ah/api/";
-    CountingIdlingResource idlingResource = new CountingIdlingResource("network");
+    protected CountingIdlingResource idlingResource = new CountingIdlingResource("network");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +86,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected void startJoke(String joke) {
-        idlingResource.decrement();
         Intent jokerIntent = new Intent(this, JokerActivity.class);
         jokerIntent.putExtra(JokerActivity.JOKE_EXTRA, joke);
         startActivity(jokerIntent);
@@ -102,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             progressBar.setVisibility(View.GONE);
+            idlingResource.decrement();
             startJoke(result);
         }
     }

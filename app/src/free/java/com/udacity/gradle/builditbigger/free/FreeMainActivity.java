@@ -1,6 +1,7 @@
 package com.udacity.gradle.builditbigger.free;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -30,14 +31,21 @@ public class FreeMainActivity extends com.udacity.gradle.builditbigger.MainActiv
     }
 
     private void setupInterstitialAd() {
+        idlingResource.increment();
         interstitialAd  = new InterstitialAd(this);
         interstitialAd.setAdUnitId(getString(R.string.test_ad_unit_id));
         interstitialAd.loadAd(new AdRequest.Builder().build());
         interstitialAd.setAdListener(new AdListener() {
             @Override
             public void onAdClosed() {
+                idlingResource.increment();
                 interstitialAd.loadAd(new AdRequest.Builder().build());
                 FreeMainActivity.super.startJoke(joke);
+            }
+
+            @Override
+            public void onAdLoaded() {
+                idlingResource.decrement();
             }
         });
     }

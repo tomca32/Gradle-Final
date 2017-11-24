@@ -51,12 +51,12 @@ dependencies {
 }
 
 
-task testIntegration(dependsOn: [':backend:appengineRun', 'connectedPaidDebugAndroidTest']) {
+task testIntegration(dependsOn: [':backend:appengineRun', 'connectedAndroidTest']) {
     group 'verification'
-    description 'Starts a local GAE dev server, runs integration tests (paidAndroidTest), and stop GAE server'
+    description 'Starts a local GAE dev server, runs android tests, and stops GAE server'
     finalizedBy ':backend:appengineStop'
 }
 
 afterEvaluate {
-    connectedPaidDebugAndroidTest.mustRunAfter(':backend:appengineRun')
+    connectedAndroidTest.mustRunAfter(':backend:appengineRun')
 }
