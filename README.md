@@ -2,6 +2,7 @@
 
 - Implemented Progress Bar while joke is loading
 - Implemented interstitial ad
+- Implemented android tests for both paid and free version, they are different because the free version has to close the interstitial ad
 - Implemented testIntegration task in app build.gradle that will start GAE, run tests, and stop GAE
 
 Original readme below...
