@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         new JokeAsyncTask().execute();
     }
 
-    public void startJoke(String joke) {
+    protected void startJoke(String joke) {
         idlingResource.decrement();
         Intent jokerIntent = new Intent(this, JokerActivity.class);
         jokerIntent.putExtra(JokerActivity.JOKE_EXTRA, joke);

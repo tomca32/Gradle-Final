@@ -37,6 +37,7 @@ appengine {
         oauth2 = true
     }
     httpAddress = "0.0.0.0"
+    daemon true
     endpoints {
         getClientLibsOnBuild = true
         getDiscoveryDocsOnBuild = false

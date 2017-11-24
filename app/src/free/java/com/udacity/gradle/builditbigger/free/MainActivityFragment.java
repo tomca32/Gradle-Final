@@ -15,7 +15,6 @@ import com.udacity.gradle.builditbigger.R;
  */
 
 public class MainActivityFragment extends Fragment {
-
     public MainActivityFragment() {
     }
 
