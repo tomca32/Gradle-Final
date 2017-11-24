@@ -1,3 +1,12 @@
+# Final Project for Gradle course in Udacity's Android Nanodegree
+
+- Implemented Progress Bar while joke is loading
+- Implemented interstitial ad
+- Implemented testIntegration task in app build.gradle that will start GAE, run tests, and stop GAE
+
+Original readme below...
+
+
 # Gradle for Android and Java Final Project
 
 In this project, you will create an app with multiple flavors that uses
